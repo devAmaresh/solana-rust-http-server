@@ -18,7 +18,6 @@ async fn main() -> Result<(), std::io::Error> {
     let addr = format!("{}:{}", host, port);
 
     let app = Route::new()
-        .at("/health", get(health_check))
         .at("/keypair", post(generate_keypair))
         .at("/token/create", post(create_token))
         .at("/token/mint", post(mint_token))
