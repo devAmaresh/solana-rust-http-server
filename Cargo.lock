@@ -2064,6 +2064,7 @@ dependencies = [
  "bs58 0.5.1",
  "ed25519-dalek",
  "poem",
+ "rand 0.7.3",
  "rand 0.8.5",
  "serde",
  "solana-program",
