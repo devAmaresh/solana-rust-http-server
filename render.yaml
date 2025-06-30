@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: solana-fellowship-server
+    env: rust
+    buildCommand: cargo build --release
+    startCommand: ./target/release/solana-fellowship-server
+    envVars:
+      - key: RUST_LOG
+        value: info
