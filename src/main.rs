@@ -13,7 +13,6 @@ use std::env;
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    
     let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
     let host = "0.0.0.0"; 
     let addr = format!("{}:{}", host, port);

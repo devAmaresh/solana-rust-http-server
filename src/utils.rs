@@ -3,6 +3,7 @@ use bs58::{decode, encode};
 use base64::{engine::general_purpose, Engine as _};
 use solana_program::pubkey::Pubkey;
 use std::str::FromStr;
+use poem::Response;
 use crate::models::{AccountMetaResponse, ApiResponse};
 
 pub fn generate_new_keypair() -> Keypair {
@@ -42,20 +43,32 @@ pub fn parse_signature(signature_bytes: &[u8]) -> Result<Signature, String> {
     Signature::from_bytes(signature_bytes).map_err(|_| "Invalid signature format".to_string())
 }
 
-pub fn create_error_response<T>(error_msg: &str) -> ApiResponse<T> {
-    ApiResponse {
+// Return JSON with 400 status for errors
+pub fn create_error_response<T: serde::Serialize>(error_msg: &str) -> Response {
+    let error_response = ApiResponse::<T> {
         success: false,
         data: None,
         error: Some(error_msg.to_string()),
-    }
+    };
+    
+    Response::builder()
+        .status(poem::http::StatusCode::BAD_REQUEST)
+        .content_type("application/json")
+        .body(serde_json::to_string(&error_response).unwrap())
 }
 
-pub fn create_success_response<T>(data: T) -> ApiResponse<T> {
-    ApiResponse {
+// Return JSON with 200 status for success
+pub fn create_success_response<T: serde::Serialize>(data: T) -> Response {
+    let success_response = ApiResponse {
         success: true,
         data: Some(data),
         error: None,
-    }
+    };
+    
+    Response::builder()
+        .status(poem::http::StatusCode::OK)
+        .content_type("application/json")
+        .body(serde_json::to_string(&success_response).unwrap())
 }
 
 pub fn convert_account_metas(accounts: &[solana_program::instruction::AccountMeta]) -> Vec<AccountMetaResponse> {

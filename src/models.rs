@@ -3,7 +3,8 @@ use serde::{Deserialize, Serialize};
 // Request Models
 #[derive(Debug, Deserialize)]
 pub struct CreateTokenRequest {
-    pub mint_authority: String,
+    #[serde(rename = "mintAuthority")]
+    pub mint_authority: String,  // Follow Rust conventions with serde rename
     pub mint: String,
     pub decimals: u8,
 }
